@@ -82,6 +82,11 @@ Colton goes one step further: you write one contract which creates both the coll
 - Reduces over-specification on the provider when no consumer needs certain functionality
 - Eliminates code repetition and human bookkeeping error
 
+#### Visualization
+I'm not a fan of proof by picture, but I made one anyway. You can tell this is a legitimate software engineering diagram because it makes a circle.
+
+![Colton: Contract testing cycle](contract-cycle-diagram.png)
+
 ### Project Goals
 
 - Eliminate duplication across contract tests
