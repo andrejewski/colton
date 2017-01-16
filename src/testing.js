@@ -12,6 +12,10 @@ export function defaultCheckResult (actual, expected) {
   return actual === expected
 }
 
+export function defaultTestUnit (title, func) {
+  func()
+}
+
 export function validateUsagesMatches (methodName, args, matches) {
   if (matches.length > 1) {
     // error: conflicting method uses
@@ -40,7 +44,7 @@ export class ColtonConsumerError {
     try {
       func()
     } catch (error) {
-      return new ColtonConsumerError(error)
+      throw new ColtonConsumerError(error)
     }
   }
 
@@ -126,13 +130,13 @@ export function testProviderMethods (test, provider, methods) {
       )
 
       if (reply === 'returns') {
-        test(title('return', expected), () => {
+        test(title('return'), () => {
           assert(checkResult(provider[key].apply(self, args), expected))
         })
       }
 
       if (reply === 'throws') {
-        test(title('throw', expected), () => {
+        test(title('throw'), () => {
           let value
           try {
             value = provider[key].apply(self, args)
@@ -145,7 +149,7 @@ export function testProviderMethods (test, provider, methods) {
       }
 
       if (reply === 'resolves') {
-        test(title('resolve with', expected), () => {
+        test(title('resolve with'), () => {
           return provider[key].apply(self, args).then(
             value => assert(checkResult(value, expected)),
             reason => fail(`Usage "${label}" rejected instead of resolving`)
@@ -154,7 +158,7 @@ export function testProviderMethods (test, provider, methods) {
       }
 
       if (reply === 'rejects') {
-        test(title('reject with', expected), () => {
+        test(title('reject with'), () => {
           return provider[key].apply(self, args).then(
             value => fail(`Usage "${label}" resolved instead of rejecting`),
             reason => assert(checkResult(reason, expected))
@@ -179,11 +183,7 @@ export function provide (contract) {
   }
 }
 
-export function defaultTest (title, func) {
-  func()
-}
-
-export function consume (contract, provider, test = defaultTest) {
+export function consume (contract, provider, test = defaultTestUnit) {
   const {values, methods} = contract
   testProviderValues(test, provider, values)
   testProviderMethods(test, provider, methods)

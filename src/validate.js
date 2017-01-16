@@ -63,7 +63,7 @@ export function validateUsage (label, use) {
   // have no confusion about "default" args
   assert(Array.isArray(args), `Usage "${label}" args must be an array`)
 
-  const has = key => use.hasOwnProperty(key)
+  const has = key => use.hasOwnProperty(key) ? 1 : 0
   const count = has('returns') + has('throws') + has('resolves') + has('rejects')
 
   // 0 or 1 because `returns` may be undefined which is okay
